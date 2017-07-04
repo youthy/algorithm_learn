@@ -1,0 +1,59 @@
+#!/usr/bin/env escript
+%% -*- erlang -%-
+%%! -smp enable -sname test
+
+main(StringList) ->
+    List = lists:map(fun(S) -> list_to_integer(S) end, StringList),
+    {Time, Value} = timer:tc(fun() -> max_sub_sequence_sum(List) end),
+    {Time2, Value2} = timer:tc(fun() -> max_sub_sequence_sum_divide_conquer(List) end),
+    io:format("动态规划 time: ~pus, value:~p~n", [Time, Value]),
+    io:format("分治 time: ~pus, value:~p~n", [Time2, Value2]),
+    ok.
+
+    
+%% 动态规划
+max_sub_sequence_sum(L) ->
+    max_sub_sequence_sum(L, 0, 0).
+max_sub_sequence_sum([], Max, _) ->
+    Max;
+max_sub_sequence_sum([H|T], Max, Tmp) ->
+    Tmp2 = Tmp + H,
+    case Tmp2 > Max of
+        true -> max_sub_sequence_sum(T, Tmp2, Tmp2);
+        false ->
+            case Tmp2 < 0 of
+                true ->
+                    max_sub_sequence_sum(T, Max, 0);
+                false ->
+                    max_sub_sequence_sum(T, Max, Tmp2)
+            end
+    end.
+
+%% 分治法
+max_sub_sequence_sum_divide_conquer([]) ->
+    0;
+max_sub_sequence_sum_divide_conquer([Last]) ->
+    Last;
+max_sub_sequence_sum_divide_conquer(L) ->
+    N = length(L),
+    Mid = N div 2,
+    {SubL1, SubL2} = lists:split(Mid, L),
+    Left = max_sub_sequence_sum_divide_conquer(SubL1),
+    Right = max_sub_sequence_sum_divide_conquer(SubL2),
+    Fun = 
+    fun(E, {Sum, Max}) -> 
+            Sum2 = E + Sum,
+            case Sum2 > Max of
+                true -> {Sum2, Sum2};
+                false -> {Sum2, Max}
+            end
+    end,
+    {_, Left2} = lists:foldr(Fun, {0, 0}, SubL1),
+    {_, Right2} = lists:foldl(Fun, {0, 0}, SubL2),
+    max(max(Left, Right), Left2 + Right2).
+
+
+
+
+    
+
