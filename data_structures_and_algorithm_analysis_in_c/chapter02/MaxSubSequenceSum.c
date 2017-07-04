@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <stddef.h>
 
 // 暴力求解
 // O(n^3)
@@ -54,16 +55,21 @@ max_subsequence_sum4(const int a[], int n){
 //分治
 // O(NlgN)
 int
-max_subsequence_sum3(const int a[], int start, int end){
+max_sub3(const int a[], int start, int end){
   if(start == end){
-    return a[start];
+      if(a[start] > 0)
+          return a[start];
+      else
+          return 0;
   }
-  int mid = (end - start )/2 + start;
+  //int mid = (end - start )/2 + start;
+  int mid = (start + end)/2;
   int left, right;
-  left = max_subsequence_sum3(a, start, mid);
-  right = max_subsequence_sum3(a, mid + 1, end);
+  // 左面的最小子序列和和右面的最小子序列和
+  left = max_sub3(a, start, mid);
+  right = max_sub3(a, mid + 1, end);
   int left2,right2,tmp;
-  left2 = right2 = INT_MIN;
+  left2 = right2 = 0;
   tmp = 0;
   for(int i = mid; i >= start; i--){
     tmp += a[i];
@@ -81,12 +87,21 @@ max_subsequence_sum3(const int a[], int start, int end){
 }
 
 int
+max_subsequence_sum3(const int a[], int n){
+  return max_sub3(a, 0, n-1);
+}
+
+int
 main(int argc, char const *argv[]) {
   /* code */
   int a[] ={1,-3,5,19,-5,10, 23,-14,9,1,20};
-  printf("%i\n", max_subsequence_sum(a, 11));
-  printf("%i\n", max_subsequence_sum2(a, 11));
-  printf("%i\n", max_subsequence_sum4(a, 11));
-  printf("%i\n", max_subsequence_sum3(a, 0, 10));
+  for(int i = 0; i < argc; i++) {
+    printf("%s\n", argv[i]);
+  }
+  size_t n = sizeof(a)/sizeof(int);
+  printf("暴力法n^3: %i\n", max_subsequence_sum(a, n));
+  printf("n^2: %i\n", max_subsequence_sum2(a, n));
+  printf("动态规划: %i\n", max_subsequence_sum4(a, n));
+  printf("分治: %i\n", max_subsequence_sum3(a, n));
   return 0;
 }
