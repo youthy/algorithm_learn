@@ -1,9 +1,7 @@
 #include <stdio.h>
-#include <math.h>
 
 void insert(int arr[], int i)
 {
-    // Your code here 
     int j = i -1;
     int tmp = arr[i];
     while(j >= 0 && arr[j] > tmp){
