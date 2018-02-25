@@ -31,6 +31,7 @@ struct Entry *newEntry(int data)
 //  } head;
 TAILQ_HEAD(tailhead, Entry) head;
 
+
 int main(void)
 {
     struct tailhead *headp;
