@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 // util
 int member(char chr, char *str)
@@ -32,7 +33,6 @@ void reverse(char *str)
 //********* print reverse of string with special chracters stay
 void reverse_except_sp(char *str, char *sp, int n)
 {
-    printf("add:%X", str);
     int l = 0;
     // ignore '\0'
     int r = n - 2;
@@ -50,13 +50,56 @@ void reverse_except_sp(char *str, char *sp, int n)
         }
     }
 }
-int main(void)
+
+//********* remove dups
+char *remove_dups(char *str)
+{
+    char map[256] = {0};
+    int i = 0;
+    int j = 0;
+    while(*(str + j))
+    {
+        if(!map[*(str + j)])
+        {
+            *(str + i) = *(str + j);
+            i++;
+        }
+        map[*(str + j)]++;
+        j++;
+    }
+    *(str + i) = '\0';
+    return str;
+}
+
+//********* split  string
+void split_str(char *str, char *delimiter)
+{
+    char *token = strtok(str, delimiter);
+    while(token != NULL)
+    {
+        printf("%s\n", token);
+        token = strtok(NULL, delimiter);
+    }
+}
+
+// ******* find smallest window in string containing all characters of another string
+char *find_smallest_window(char *str, char *pattern, char *window, int count)
+{
+    int match_count = 0;
+    int tmp[256] = {0};
+    int start = 0;
+    int end = 0;
+
+}
+
+    int main(void)
 {
     char str[] = "El psy congroo!";
     //reverse(str);
     char sp[] = " !";
-    printf("add0:%X", &str);
     reverse_except_sp(str, sp, sizeof(str)/sizeof(char));
     printf("%s", str);
+    printf("%s", remove_dups(str));
+    split_str(str, "o ");
     return 0;
 }
