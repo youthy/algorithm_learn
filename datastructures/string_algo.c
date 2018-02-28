@@ -82,17 +82,7 @@ void split_str(char *str, char *delimiter)
     }
 }
 
-// ******* find smallest window in string containing all characters of another string
-char *find_smallest_window(char *str, char *pattern, char *window, int count)
-{
-    int match_count = 0;
-    int tmp[256] = {0};
-    int start = 0;
-    int end = 0;
-
-}
-
-    int main(void)
+int main(void)
 {
     char str[] = "El psy congroo!";
     //reverse(str);
