@@ -20,51 +20,64 @@ int member(const char *str, char ch)
 // find the smallest window of str which contains all characters of match
 char *smallest_window(const char *str, const char *match, char *buf, int mcount)
 {
+    int front, end, front_ret, end_ret;
+    front = end = front_ret = end_ret = 0;
+    int smallest_tmp = 0;
+    int count_tmp = 0;
     int appear_count[256] = {0};
-    int match_max = 0;
+    char ch = *(str + end);
     std::deque<int> match_index;
-    char c;
-    int i = 0;
-    while((c = *(str + i)))
+    // when ch != '\0'
+    while (ch)
     {
-        if(member(match, c))
+        if (member(match, ch))
         {
-            if(appear_count[c] == 0)
-                match_max++;
-            appear_count[c]++;
-            match_index.push_back(i);
+            // if ch first appear
+            if (!appear_count[ch])  
+            {
+                // inc count_tmp
+                count_tmp++;
+                // if is the first in match, put front = end
+                if (count_tmp == 1) front = end;
+            }
+            match_index.push_back(end);  // save match index in deque
+            appear_count[ch]++; // inc match char appear count
+            if (count_tmp >= mcount)
+            {
+            // if the front char appear more than one and all match chars had found
+            // means front can move forward until which char appear_count == 1
+                while (appear_count[*(str + front)] > 1)
+                {
+                    appear_count[*(str + front)]--;
+                    match_index.pop_front();
+                    front = match_index.front();
+                }
+                // replace smallest_tmp
+                if (!smallest_tmp || end - front < smallest_tmp)
+                {
+                    smallest_tmp = end - front;
+                    front_ret = front;
+                    end_ret = end;
+                }
+            }
         }
-        i++;
+        end++; // end always inc until reach the '\0' of str
+        ch = *(str + end);
     }
-    // can not find window contain all characters of match string
-    if(match_max < mcount)
+    if(front_ret) // if find window
+    {
+        strncpy(buf, &str[front], end_ret - front_ret + 1);
+        return buf;
+    }
+    else
         return NULL;
-    c = *(str + match_index.front());
-    while(appear_count[c] > 1)
-    {
-        match_index.pop_front();
-        appear_count[c]--;
-        c = *(str + match_index.front());
-    }
-    
-    c = *(str + match_index.back());
-    while(appear_count[c] > 1)
-    {
-        match_index.pop_back();
-        appear_count[c]--;
-        c = *(str + match_index.back());
-    }
-    int front = match_index.front();
-    int end = match_index.back();
-    strncpy(buf, &str[front], end - front + 1);
-    return buf;
 }
 int main(void)
 {
     const char src[] = "hello, erlang";
-    const char match[] = "el";
+    const char match[] = "elo";
     char buf[20] = {0};
-    char *ret = smallest_window(src, match, buf, 2);
+    char *ret = smallest_window(src, match, buf, 3);
     printf("%s\n", ret);
 
     return 0;
