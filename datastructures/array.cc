@@ -39,8 +39,44 @@ int ordered_2d_array_member(int *arr, int m, int n, int num)
             else if(tmp > num)
                 break;
         }
+        cols++;
     }
     return 0;
+}
+
+int pivot_binary_search(int arr[], int start, int end, int n)
+{
+    int mid = (start + end)/2;
+    if(arr[mid] == n)
+        return mid;
+    if(start == end)
+        return 0;
+    if(arr[mid] < n)
+    {
+        if (arr[end] > arr[mid + 1] && arr[mid + 1] > arr[mid])
+            return pivot_binary_search(arr, mid + 1, end, n);
+        if(arr[mid + 1] > arr[end])
+            return pivot_binary_search(arr, mid + 1, end, n);
+        return pivot_binary_search(arr, start, mid - 1, n);
+    }
+    else
+    {
+        if(arr[start] > n && arr[mid] > arr[start])
+            return pivot_binary_search(arr, mid + 1, end, n);
+    }
+}
+
+int binary_search(int arr[], int start, int end, int n)
+{
+    int mid = (start + end)/2;
+    if(arr[mid] == n)
+        return mid;
+    if(start == end)
+        return 0;
+    if(arr[mid] < n)
+        return binary_search(arr, mid + 1, end, n);
+    else
+        return binary_search(arr, start, mid - 1, n);
 }
 
 int main(void)
@@ -49,6 +85,6 @@ int main(void)
     left_rotote(a, 13, 10);
     print_array(a, 10);
     int arr[4][4]={{1,2,3,4}, {3,5,7,9}, {5,6,7,8}, {7,9,10,11}};
-    printf("order 2d member:%d", ordered_2d_array_member(arr, 4, 4, 3));
+    printf("order 2d member:%d", ordered_2d_array_member((int *)arr, 4, 4, 20));
     return 0;
 }
