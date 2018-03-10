@@ -22,18 +22,17 @@ char *convert(char *s, int numRows)
     // 导致无限循环 time limit exceed了
     for(int i = 1; i <= numRows; i++)
     {
-        int j, q;
         // j 相当于第一行的元素索引 最后一个可以大于len 因为存在下面这种情况
         //   0     4
         //   1  3  5  7 
         //   2     6
         // 如果之取到4会忽略7.
-        for(j = 0, q = 1; j < len + 2 * (numRows - 1); j = 2 * q * (numRows - 1), q++)
+        for(int j = 0, q = 1; j < len + 2 * (numRows - 1); j = 2 * q * (numRows - 1), q++)
         {
             left = j - (i - 1); //左索引
             right = j + (i - 1); // 右索引
             // 对左索引做不等于上一个元素的右索引判断 用于最后一行
-            if (left >= 0 && left != j - 2 * (numRows - 1) + (i - 1) && left < len)
+            if (left >= 0 && left != right - 2 * (numRows - 1) && left < len)
             {
                 ret[idx] = s[left];
                 idx++;
