@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <deque>
+#include <unordered_map>
 
 int member(const char *str, char ch)
 {
@@ -72,6 +73,39 @@ char *smallest_window(const char *str, const char *match, char *buf, int mcount)
     else
         return NULL;
 }
+
+// string contain  jude a contain all characters in b
+bool string_contain(const char *a, const char *b)
+{
+    std::unordered_map<int, bool> amap;
+    int p1 = 0, p2 = 0;
+    char cha, chb;
+    while ((chb = *(b + p2)))
+    {
+        if (amap[chb])
+        {
+            p2++;
+        }
+        else
+        {
+            cha = *(a + p1);
+            if (!cha)
+                return false;
+            else
+            {
+                while (cha)
+                {
+                    amap[cha] = true;
+                    p1++;
+                    if (cha == chb)
+                        break;
+                    cha = *(a + p1);
+                }
+            }
+        }
+    }
+    return true;
+}
 int main(void)
 {
     const char src[] = "hello, erlang";
@@ -79,6 +113,9 @@ int main(void)
     char buf[20] = {0};
     char *ret = smallest_window(src, match, buf, 3);
     printf("%s\n", ret);
+    const char a[] = "hello, world";
+    const char b[] = "ela";
+    printf("%d\n", string_contain(a, b));
 
     return 0;
 }
